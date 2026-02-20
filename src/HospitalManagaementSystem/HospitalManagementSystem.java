@@ -2,17 +2,34 @@ package HospitalManagaementSystem;
 
 import javax.print.Doc;
 import java.sql.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class HospitalManagementSystem {
+    public static void main(String[] args){
 
-    /// connection credentials
-    private static final String url = "jdbc:mysql://localhost:3306/hospital";
-    private static final String username = "root";
-    private static final String password = "sai1005";
+        /// Create a Properties object to hold config values
+        Properties prop = new Properties();
 
-    public static void main(String[] args) {
         try {
+            /// Load database credentials from config.properties
+             prop.load(new FileInputStream("config.properties"));
+        } catch (IOException e) {
+            /// Stop if file not found or cannot read
+            System.out.println("Failed to load config.properties");
+            e.printStackTrace();
+            return;
+        }
+
+        /// Fetch credentials from the Properties object
+        final String url = prop.getProperty("db.url");
+        final String username = prop.getProperty("db.username");
+        final String password = prop.getProperty("db.password");
+
+
+     try {
             Class.forName("com.mysql.cj.jdbc.Driver"); /// Load...
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
